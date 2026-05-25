@@ -3,8 +3,18 @@
 
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react"; // Lightweight mobile icons
+import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
 
 export default function PremiumNavbar() {
+  // getting user data
+  const {
+    data: session,
+    isPending, //loading state
+  } = authClient.useSession();
+  console.log("user session:", session);
+  console.log("user is pending:", isPending);
+
   // State to track mobile menu toggle smoothly without external UI dependencies
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -80,12 +90,12 @@ export default function PremiumNavbar() {
             ========================================== */}
         <div className="flex items-center gap-4">
           {/* Main button: White block text style matching the image exactly */}
-          <a
-            href="#"
+          <Link
+            href="/signup"
             className="hidden sm:inline-flex items-center justify-center bg-white text-black font-semibold px-6 h-11 text-sm rounded-xl hover:bg-white/90 transition-all active:scale-95"
           >
             Get Started
-          </a>
+          </Link>
 
           {/* Mobile Menu Button. Only renders on small screens (md:hidden).
            */}
@@ -134,12 +144,12 @@ export default function PremiumNavbar() {
             </a>
 
             {/* CTA falls into the mobile stack for simple mobile access */}
-            <a
-              href="#"
+            <Link
+              href={"/signup"}
               className="flex items-center justify-center bg-white text-black font-semibold w-full h-12 text-base rounded-xl mt-2"
             >
               Get Started
-            </a>
+            </Link>
           </nav>
         </aside>
       )}
