@@ -1,72 +1,148 @@
-"use client";
-import { useState } from "react";
-import { Link, Button } from "@heroui/react";
+// src/components/layout/navbar/Navbar.jsx
+"use client"; // Required for client-side state handling of the mobile drawer switch
 
-const Navbar = () => {
+import React, { useState } from "react";
+import { Menu, X } from "lucide-react"; // Lightweight mobile icons
+
+export default function PremiumNavbar() {
+  // State to track mobile menu toggle smoothly without external UI dependencies
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-40 w-full border-b border-separator bg-background/70 backdrop-blur-lg">
-      <header className="flex h-16 items-center justify-between px-6">
-        <div className="flex items-center gap-4">
-          <button
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <span className="sr-only">Menu</span>
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-          <div>Logo</div>
-        </div>
-        <ul className="hidden items-center gap-4 md:flex">
-          <li>
-            <Link href="#">Features</Link>
-          </li>
-          <li>
-            <Link href="#">Pricing</Link>
-          </li>
-        </ul>
-      </header>
-      {isMenuOpen && (
-        <div className="border-t border-separator md:hidden">
-          <ul className="flex flex-col gap-2 p-4">
-            <li>
-              <Link href="#" className="block py-2">
-                Features
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="block py-2">
-                Pricing
-              </Link>
-            </li>
-          </ul>
-        </div>
-      )}
-    </nav>
-  );
-};
+    /* HTML5 <header> semantic tag for optimal SEO and screen-reader accessibility.
+       Fixed position at top with a dark theme background color matching the design.
+    */
+    <header className="w-full bg-[#121212] border-b border-white/10 sticky top-0 z-50 dark">
+      {/* HTML5 <section> container wrapper replacing the old Navbar element.
+          Provides standard layout padding across all desktop break-points.
+      */}
+      <section className="h-20 max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between gap-4">
+        {/* ==========================================
+            1. BRAND / LOGO SECTION
+            ========================================== */}
+        <div className="flex items-center gap-3 select-none">
+          {/* Stylized pure CSS geometric logo icon */}
+          <div className="w-9 h-9 bg-gradient-to-tr from-purple-600 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
+            <span className="text-white font-black text-lg">P</span>
+          </div>
 
-export default Navbar;
+          {/* Typography layout mimicking the reference image's stacked font style */}
+          <div className="flex flex-col text-left leading-none">
+            <span className="text-sm font-extrabold tracking-tight text-white uppercase">
+              Hire
+            </span>
+            <span className="text-sm font-extrabold tracking-tight text-white uppercase">
+              Loop
+            </span>
+          </div>
+        </div>
+
+        {/* ==========================================
+            2. DESKTOP LINKS & CENTRAL PILL
+            ========================================== 
+            Using standard HTML5 <nav> for core links. Implements the rounded-full 
+            pill container style from your design screenshot. Hidden on mobile.
+        */}
+        <nav className="hidden md:flex items-center gap-8 bg-[#1A1A1A] border border-white/5 px-8 py-3 rounded-full">
+          <a
+            href="#"
+            className="text-sm font-medium text-white/70 hover:text-white transition-colors"
+          >
+            Browse Jobs
+          </a>
+          <a
+            href="#"
+            className="text-sm font-medium text-white/70 hover:text-white transition-colors"
+          >
+            Company
+          </a>
+          <a
+            href="#"
+            className="text-sm font-medium text-white/70 hover:text-white transition-colors"
+          >
+            Pricing
+          </a>
+
+          {/* The visual vertical separator line visible in your reference image */}
+          <div className="w-[1px] h-4 bg-white/20 mx-1" />
+
+          {/* Custom purple color match for your design's Sign In link */}
+          <a
+            href="#"
+            className="text-sm font-semibold text-[#6366F1] hover:text-[#818CF8] transition-colors"
+          >
+            Sign In
+          </a>
+        </nav>
+
+        {/* ==========================================
+            3. CALL TO ACTION / MOBILE CONTROLLER
+            ========================================== */}
+        <div className="flex items-center gap-4">
+          {/* Main button: White block text style matching the image exactly */}
+          <a
+            href="#"
+            className="hidden sm:inline-flex items-center justify-center bg-white text-black font-semibold px-6 h-11 text-sm rounded-xl hover:bg-white/90 transition-all active:scale-95"
+          >
+            Get Started
+          </a>
+
+          {/* Mobile Menu Button. Only renders on small screens (md:hidden).
+           */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 text-white/80 hover:text-white focus:outline-none"
+            aria-label="Toggle navigation menu"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </section>
+
+      {/* ==========================================
+          4. MOBILE RESPONSIVE DRAWER OVERLAY
+          ========================================== 
+          Using HTML5 <aside> for separate visual layer drawer layout. 
+          Opens and closes smoothly using Tailwind standard transitions.
+      */}
+      {isMenuOpen && (
+        <aside className="md:hidden w-full bg-[#121212] border-t border-white/5 px-6 py-6 absolute left-0 right-0 top-20 shadow-2xl z-40 transition-all duration-200">
+          <nav className="flex flex-col gap-5">
+            <a
+              href="#"
+              className="text-lg font-medium text-white/80 hover:text-white py-1"
+            >
+              Browse Jobs
+            </a>
+            <a
+              href="#"
+              className="text-lg font-medium text-white/80 hover:text-white py-1"
+            >
+              Company
+            </a>
+            <a
+              href="#"
+              className="text-lg font-medium text-white/80 hover:text-white py-1"
+            >
+              Pricing
+            </a>
+
+            <div className="w-full h-[1px] bg-white/10 my-1" />
+
+            <a href="#" className="text-lg font-semibold text-[#6366F1] py-1">
+              Sign In
+            </a>
+
+            {/* CTA falls into the mobile stack for simple mobile access */}
+            <a
+              href="#"
+              className="flex items-center justify-center bg-white text-black font-semibold w-full h-12 text-base rounded-xl mt-2"
+            >
+              Get Started
+            </a>
+          </nav>
+        </aside>
+      )}
+    </header>
+  );
+}
