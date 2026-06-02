@@ -12,11 +12,15 @@ export default function PremiumNavbar() {
     data: session,
     isPending, //loading state
   } = authClient.useSession();
-  console.log("user session:", session);
-  console.log("user is pending:", isPending);
 
   // State to track mobile menu toggle smoothly without external UI dependencies
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const singOut = async () => {
+    await authClient.signOut();
+    console.log("signout:");
+    console.log(session?.user?.id);
+  };
 
   return (
     /* HTML5 <header> semantic tag for optimal SEO and screen-reader accessibility.
@@ -76,13 +80,20 @@ export default function PremiumNavbar() {
           {/* The visual vertical separator line visible in your reference image */}
           <div className="w-[1px] h-4 bg-white/20 mx-1" />
 
+          {session?.user ? (
+            <button onClick={() => singOut()} className="hover:underline">
+              Sign out
+            </button>
+          ) : (
+            <Link
+              href={"/signin"}
+              className="text-sm font-semibold text-[#6366F1] hover:text-[#818CF8] transition-colors"
+            >
+              Sign In
+            </Link>
+          )}
+
           {/* Custom purple color match for your design's Sign In link */}
-          <a
-            href="#"
-            className="text-sm font-semibold text-[#6366F1] hover:text-[#818CF8] transition-colors"
-          >
-            Sign In
-          </a>
         </nav>
 
         {/* ==========================================
@@ -90,12 +101,16 @@ export default function PremiumNavbar() {
             ========================================== */}
         <div className="flex items-center gap-4">
           {/* Main button: White block text style matching the image exactly */}
-          <Link
-            href="/signup"
-            className="hidden sm:inline-flex items-center justify-center bg-white text-black font-semibold px-6 h-11 text-sm rounded-xl hover:bg-white/90 transition-all active:scale-95"
-          >
-            Get Started
-          </Link>
+          {session?.user ? (
+            <p>{session?.user?.name}</p>
+          ) : (
+            <Link
+              href="/signup"
+              className="hidden sm:inline-flex items-center justify-center bg-white text-black font-semibold px-6 h-11 text-sm rounded-xl hover:bg-white/90 transition-all active:scale-95"
+            >
+              Get Started
+            </Link>
+          )}
 
           {/* Mobile Menu Button. Only renders on small screens (md:hidden).
            */}
@@ -139,17 +154,30 @@ export default function PremiumNavbar() {
 
             <div className="w-full h-[1px] bg-white/10 my-1" />
 
-            <a href="#" className="text-lg font-semibold text-[#6366F1] py-1">
-              Sign In
-            </a>
+            {session?.user ? (
+              <button onClick={() => singOut()} className="hover:underline">
+                Sign out
+              </button>
+            ) : (
+              <Link
+                href={"/signin"}
+                className="text-sm font-semibold text-[#6366F1] hover:text-[#818CF8] transition-colors"
+              >
+                Sign In
+              </Link>
+            )}
 
             {/* CTA falls into the mobile stack for simple mobile access */}
-            <Link
-              href={"/signup"}
-              className="flex items-center justify-center bg-white text-black font-semibold w-full h-12 text-base rounded-xl mt-2"
-            >
-              Get Started
-            </Link>
+            {session?.user ? (
+              <p>{session?.user?.name}</p>
+            ) : (
+              <Link
+                href="/signup"
+                className="hidden sm:inline-flex items-center justify-center bg-white text-black font-semibold px-6 h-11 text-sm rounded-xl hover:bg-white/90 transition-all active:scale-95"
+              >
+                Get Started
+              </Link>
+            )}
           </nav>
         </aside>
       )}
