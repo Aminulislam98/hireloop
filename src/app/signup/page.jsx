@@ -34,7 +34,7 @@ export default function AuthForm() {
           error.message || "Something went wrong during sign up.",
         );
       }
-      router.push("/signin");
+      router.push("/");
 
       // Success notification
       toast.success("Account created successfully! Welcome aboard.");
