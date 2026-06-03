@@ -40,7 +40,7 @@ export function DashboardSidebar() {
         {navContent}
       </aside>
       <Drawer>
-        <Button variant="secondary">
+        <Button variant="secondary" className="md:hidden">
           <LayoutSideContent />
           Menu
         </Button>
