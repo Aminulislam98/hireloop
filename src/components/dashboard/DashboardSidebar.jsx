@@ -16,7 +16,7 @@ export function DashboardSidebar() {
     { icon: House, label: "Home", href: "/dashboard/recruiter" },
     { icon: Magnifier, label: "Jobs", href: "/dashboard/recruiter/jobs" },
     { icon: Briefcase, label: "Company", href: "/dashboard/recruiter/company" },
-    { icon: Bell, label: "Notifications", href: "#" },
+    { icon: Bell, label: "Post a Job", href: "/dashboard/recruiter/jobs/new" },
     { icon: Person, label: "Profile", href: "#" },
     { icon: Gear, label: "Settings", href: "#" },
   ];
