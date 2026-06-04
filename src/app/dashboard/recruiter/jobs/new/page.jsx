@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import {
   Form,
   TextField,
@@ -20,6 +20,9 @@ import {
   Building2,
   ChevronDown,
 } from "lucide-react";
+import { createJobs } from "@/lib/actions/jobs";
+import { useSession } from "@/lib/auth-client"; // Better Auth client hook
+import toast from "react-hot-toast";
 
 const inputCls =
   "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-zinc-100 text-sm placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 aria-invalid:border-rose-500 transition-colors";
@@ -31,7 +34,7 @@ const fieldCls = "flex flex-col gap-1.5";
 const labelCls = "text-sm font-medium text-zinc-300";
 const errorCls = "text-xs text-rose-400";
 
-// Plain native <select> — always works with FormData, no library quirks
+// Native select with touch-based validation
 function NativeSelect({ name, required, label, placeholder, children }) {
   const [touched, setTouched] = useState(false);
   const [value, setValue] = useState("");
@@ -72,26 +75,31 @@ function NativeSelect({ name, required, label, placeholder, children }) {
 
 export default function PostJobPage() {
   const router = useRouter();
+  const { data: session } = useSession(); // get logged-in user from Better Auth
   const [isRemote, setIsRemote] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setIsSubmitting(true);
+
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    console.log("Submitting:", data);
-    try {
-      const res = await fetch("/api/recruiter/jobs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, isRemote, status: "active" }),
-      });
-      if (res.ok) router.push("/dashboard/recruiter/jobs");
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
+
+    const res = await createJobs({
+      ...data,
+      isRemote,
+      status: "active", // always active on first post
+      companyId: session?.user?.id, // Better Auth user ID — used to fetch this company's jobs later
+      companyName: session?.user?.name, // display name shown on job cards
+    });
+
+    if (res) {
+      toast.success("Job posted successfully!");
+      e.target.reset();
+      redirect("/dashboard/recruiter");
     }
+
+    setIsSubmitting(false);
   }
 
   return (
@@ -323,17 +331,16 @@ export default function PostJobPage() {
               Company
             </h2>
           </div>
+          {/* Auto-filled from session — companyId and companyName are sent in handleSubmit, not as form fields */}
           <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800/60 border border-zinc-700/50">
             <div className="w-9 h-9 rounded-md bg-zinc-700 flex items-center justify-center text-zinc-400">
               <Building2 size={16} />
             </div>
             <div>
               <p className="text-sm font-medium text-zinc-200">
-                Your Company Name
+                {session?.user?.name ?? "Your Company"}
               </p>
-              <p className="text-xs text-zinc-500">
-                Auto-filled from your registered company
-              </p>
+              <p className="text-xs text-zinc-500">{session?.user?.email}</p>
             </div>
           </div>
         </div>
