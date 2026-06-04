@@ -21,7 +21,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { createJobs } from "@/lib/actions/jobs";
-import { useSession } from "@/lib/auth-client"; // Better Auth client hook
+import { authClient } from "@/lib/auth-client"; // Better Auth client
 import toast from "react-hot-toast";
 
 const inputCls =
@@ -75,7 +75,7 @@ function NativeSelect({ name, required, label, placeholder, children }) {
 
 export default function PostJobPage() {
   const router = useRouter();
-  const { data: session } = useSession(); // get logged-in user from Better Auth
+  const { data: session } = authClient.useSession(); // get logged-in user from Better Auth
   const [isRemote, setIsRemote] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -89,8 +89,8 @@ export default function PostJobPage() {
       ...data,
       isRemote,
       status: "active", // always active on first post
-      companyId: session?.user?.id, // Better Auth user ID — used to fetch this company's jobs later
-      companyName: session?.user?.name, // display name shown on job cards
+      companyId: session?.user?.id, // used to fetch this company's jobs later
+      companyName: session?.user?.name, // shown on job cards
     });
 
     if (res) {
@@ -321,7 +321,7 @@ export default function PostJobPage() {
           </TextField>
         </div>
 
-        {/* ── Company ── */}
+        {/* ── Company ── auto-filled from session, not a form field ── */}
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
           <div className="flex items-center gap-2 mb-4">
             <div className="p-1.5 rounded-md bg-zinc-800 text-zinc-400">
@@ -331,12 +331,12 @@ export default function PostJobPage() {
               Company
             </h2>
           </div>
-          {/* Auto-filled from session — companyId and companyName are sent in handleSubmit, not as form fields */}
           <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800/60 border border-zinc-700/50">
             <div className="w-9 h-9 rounded-md bg-zinc-700 flex items-center justify-center text-zinc-400">
               <Building2 size={16} />
             </div>
             <div>
+              {/* companyId and companyName are sent in handleSubmit, not as hidden form fields */}
               <p className="text-sm font-medium text-zinc-200">
                 {session?.user?.name ?? "Your Company"}
               </p>

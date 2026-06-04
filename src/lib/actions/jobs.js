@@ -6,7 +6,7 @@ export const createJobs = async (newJobData) => {
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify({ newJobData }),
+    body: JSON.stringify(newJobData),
   });
   return await res.json();
 };
