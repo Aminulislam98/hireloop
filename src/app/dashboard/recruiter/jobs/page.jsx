@@ -5,7 +5,8 @@ import { Pencil, Trash2, Eye } from "lucide-react";
 const RecruitersJobs = async () => {
   const company = await getLoggedInRecruiterCompany();
   const companyId = company?.result?._id;
-  const jobs = await getCompanyJobs(companyId, "active");
+  const jobsResult = await getCompanyJobs(companyId, "active");
+  const jobs = await jobsResult?.result;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">

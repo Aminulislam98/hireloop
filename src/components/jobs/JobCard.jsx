@@ -1,249 +1,102 @@
-// JobCard.jsx — HeroUI v2 compatible
-// Install: npm install @heroui/react framer-motion
+"use client";
 
-import { Card, CardBody, Chip, Button, Avatar } from "@heroui/react";
-import {
-  Bookmark,
-  DollarSign,
-  Clock,
-  Flame,
-  Wifi,
-  Building2,
-  Star,
-} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Bookmark, DollarSign, Clock, Wifi, Building2 } from "lucide-react";
 
-function formatSalary(min, max, currency) {
-  const fmt = (n) => {
-    const num = Number(n);
-    if (num >= 1000) return `${(num / 1000).toFixed(0)}k`;
-    return num.toString();
-  };
-  return `${currency} ${fmt(min)} – ${fmt(max)}`;
-}
+export default function JobCard({ job }) {
+  const salaryLabel = `${job.currency} ${Number(job.salaryMin).toLocaleString()} – ${Number(job.salaryMax).toLocaleString()}`;
 
-function formatDeadline(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-GB", {
+  const deadline = new Date(job.deadline).toLocaleDateString("en-GB", {
     day: "numeric",
     month: "short",
     year: "numeric",
   });
-}
-
-function getTypeBadge(type) {
-  const map = {
-    "full-time": { label: "Full-time", color: "default" },
-    "part-time": { label: "Part-time", color: "default" },
-    contract: { label: "Contract", color: "default" },
-    internship: { label: "Internship", color: "default" },
-  };
-  return map[type] || { label: type, color: "default" };
-}
-
-export default function JobCard({
-  job,
-  isActive = false,
-  onSelect,
-  onBookmark,
-}) {
-  const {
-    title,
-    type,
-    salaryMin,
-    salaryMax,
-    currency,
-    deadline,
-    city,
-    country,
-    isRemote,
-    status,
-    companyName,
-    companyLogo,
-    category,
-    isHot,
-    easyApply,
-  } = job;
-
-  const typeBadge = getTypeBadge(type);
 
   return (
-    <Card
-      isPressable
-      onPress={() => onSelect?.(job)}
-      className={`w-full transition-all duration-150 ${
-        isActive
-          ? "border-2 border-blue-400 shadow-sm"
-          : "border border-default-200 hover:border-default-400"
-      }`}
-      shadow="none"
-      radius="lg"
-    >
-      <CardBody className="p-4">
-        <div className="flex items-start gap-3">
-          {/* Company logo */}
-          <Avatar
-            src={companyLogo}
-            name={companyName?.slice(0, 2).toUpperCase()}
-            radius="md"
-            size="md"
-            className="flex-shrink-0 bg-default-100 border border-default-200"
-            imgProps={{ className: "object-contain p-1" }}
+    <article className="bg-surface border border-border rounded-lg p-4 flex items-start gap-3 hover:bg-surface-hover transition-colors duration-150">
+      {/* Company Logo */}
+      <div className="relative w-11 h-11 flex-shrink-0 rounded-md border border-border overflow-hidden bg-page-bg">
+        {job.companyLogo ? (
+          <Image
+            src={job.companyLogo}
+            alt={`${job.companyName} logo`}
+            fill
+            className="object-contain p-1"
           />
+        ) : (
+          <span className="w-full h-full flex items-center justify-center text-sm font-semibold text-text-secondary">
+            {job.companyName?.slice(0, 2).toUpperCase()}
+          </span>
+        )}
+      </div>
 
-          {/* Content */}
-          <div className="flex-1 min-w-0">
-            {/* Top row */}
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="text-sm font-semibold text-foreground leading-tight truncate">
-                {title}
-              </h3>
-              <Button
-                isIconOnly
-                size="sm"
-                variant="light"
-                aria-label="Bookmark job"
-                onPress={() => onBookmark?.(job)}
-                className="flex-shrink-0 -mt-0.5 text-default-400 hover:text-foreground"
-              >
-                <Bookmark size={16} />
-              </Button>
-            </div>
-
-            {/* Company & location */}
-            <p className="text-xs text-default-500 mt-0.5 mb-2.5">
-              {companyName}
-              {(city || country) && (
-                <>
-                  <span className="mx-1 text-default-300">•</span>
-                  {city}
-                  {city && country && ", "}
-                  {country}
-                  {isRemote && (
-                    <>
-                      <span className="mx-1 text-default-300">•</span>
-                      Remote
-                    </>
-                  )}
-                </>
-              )}
-            </p>
-
-            {/* Badges */}
-            <div className="flex flex-wrap gap-1.5 items-center">
-              {/* Salary */}
-              <Chip
-                size="sm"
-                variant="flat"
-                color="default"
-                startContent={<DollarSign size={11} />}
-                classNames={{ base: "text-xs h-6", content: "px-1" }}
-              >
-                {formatSalary(salaryMin, salaryMax, currency)}
-              </Chip>
-
-              {/* Type */}
-              <Chip
-                size="sm"
-                variant="flat"
-                color="default"
-                startContent={<Clock size={11} />}
-                classNames={{ base: "text-xs h-6", content: "px-1" }}
-              >
-                {typeBadge.label}
-              </Chip>
-
-              {/* Remote */}
-              {isRemote && (
-                <Chip
-                  size="sm"
-                  variant="flat"
-                  color="primary"
-                  startContent={<Wifi size={11} />}
-                  classNames={{
-                    base: "text-xs h-6 bg-blue-50 text-blue-600 border-blue-200",
-                    content: "px-1",
-                  }}
-                >
-                  Remote
-                </Chip>
-              )}
-
-              {/* Hybrid */}
-              {!isRemote && (
-                <Chip
-                  size="sm"
-                  variant="flat"
-                  color="default"
-                  startContent={<Building2 size={11} />}
-                  classNames={{ base: "text-xs h-6", content: "px-1" }}
-                >
-                  On-site
-                </Chip>
-              )}
-
-              {/* Hot job */}
-              {isHot && (
-                <Chip
-                  size="sm"
-                  variant="flat"
-                  color="warning"
-                  startContent={<Flame size={11} />}
-                  classNames={{ base: "text-xs h-6", content: "px-1" }}
-                >
-                  Hot Job
-                </Chip>
-              )}
-
-              {/* Easy Apply */}
-              {easyApply && (
-                <Chip
-                  size="sm"
-                  variant="solid"
-                  color="success"
-                  startContent={<Star size={11} />}
-                  classNames={{
-                    base: "text-xs h-6 bg-emerald-500 text-white",
-                    content: "px-1 font-semibold",
-                  }}
-                >
-                  Easy Apply
-                </Chip>
-              )}
-            </div>
-
-            {/* Deadline */}
-            {deadline && (
-              <p className="text-[11px] text-default-400 mt-2">
-                Deadline: {formatDeadline(deadline)}
-              </p>
-            )}
-          </div>
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        {/* Title + Bookmark */}
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-base font-semibold text-text-primary leading-tight truncate">
+            {job.title}
+          </h3>
+          <button
+            aria-label="Bookmark job"
+            className="flex-shrink-0 p-1 rounded text-text-muted hover:text-text-primary transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2"
+          >
+            <Bookmark size={16} />
+          </button>
         </div>
-      </CardBody>
-    </Card>
+
+        {/* Company & Location */}
+        <p className="text-sm text-text-secondary mt-1 mb-3 truncate">
+          {job.companyName}
+          {job.city && (
+            <>
+              {" "}
+              &bull; {job.city}, {job.country}
+            </>
+          )}
+          {job.isRemote && <> &bull; Remote</>}
+        </p>
+
+        {/* Badges */}
+        <div className="flex flex-wrap gap-2">
+          {/* Salary */}
+          <span className="inline-flex items-center gap-1 text-sm font-medium text-text-secondary bg-page-bg border-2 border-border rounded px-2 py-0.5">
+            <DollarSign size={12} aria-hidden="true" />
+            {salaryLabel}
+          </span>
+
+          {/* Job type */}
+          <span className="inline-flex items-center gap-1 text-sm font-medium text-text-secondary bg-page-bg border-2 border-border rounded px-2 py-0.5">
+            <Clock size={12} aria-hidden="true" />
+            {job.type}
+          </span>
+
+          {/* Remote / On-site */}
+          {job.isRemote ? (
+            <span className="inline-flex items-center gap-1 text-sm font-medium text-brand bg-brand-light border-2 border-brand rounded px-2 py-0.5">
+              <Wifi size={12} aria-hidden="true" />
+              Remote
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 text-sm font-medium text-text-secondary bg-page-bg border-2 border-border rounded px-2 py-0.5">
+              <Building2 size={12} aria-hidden="true" />
+              On-site
+            </span>
+          )}
+        </div>
+
+        {/* Deadline + Apply button */}
+        <div className="flex items-center justify-between gap-4 mt-3">
+          <p className="text-sm text-text-muted">Deadline: {deadline}</p>
+          <Link
+            href={`/jobs/${job._id}`}
+            className="hover:underline shrink-0 px-4 py-1.5 text-sm font-bold text-on-brand bg-brand hover:bg-brand-hover rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 active:scale-[0.98]"
+          >
+            Apply Now
+          </Link>
+        </div>
+      </div>
+    </article>
   );
 }
-
-// ─── Usage Example ───────────────────────────────────────────────────────────
-//
-// const job = {
-//   _id: "6a22c57db49bcd121b5f1579",
-//   title: "UX UI Designer",
-//   category: "Finance",
-//   type: "full-time",
-//   salaryMin: "98",
-//   salaryMax: "120",
-//   currency: "USD",
-//   deadline: "2026-09-20",
-//   city: "San Francisco",
-//   country: "United States",
-//   isRemote: true,
-//   status: "active",
-//   companyId: "6a22b900cfd6829ee244eab0",
-//   companyName: "Adobe",
-//   companyLogo: "https://i.ibb.co/d4scBpNk/adobe.png",
-//   isHot: false,
-//   easyApply: true,
-// };
-//
-// <JobCard job={job} isActive={false} onSelect={(j) => console.log(j)} />

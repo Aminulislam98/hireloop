@@ -59,7 +59,7 @@ export default function PremiumNavbar() {
         */}
         <nav className="hidden md:flex items-center gap-8 bg-[#1A1A1A] border border-white/5 px-8 py-3 rounded-full">
           <Link
-            href="/dashboard/recruiter/jobs"
+            href="/jobs"
             className="text-sm font-medium text-white/70 hover:text-white transition-colors"
           >
             Browse Jobs
