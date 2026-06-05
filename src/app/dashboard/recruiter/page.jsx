@@ -12,11 +12,11 @@ const stats = [
 
 const RecruiterDashboardHomePage = () => {
   const { data: session, isPending } = authClient.useSession();
-
+  const userName = session?.user?.name;
   return (
     <div className="p-6 space-y-6 ">
       <h1 className="text-xl font-semibold text-zinc-100">
-        {isPending ? "Loading..." : `Welcome, ${session?.user?.name}`}
+        {isPending ? "Loading..." : userName && `Welcome, ${userName}`}
       </h1>
       <StatsGrid stats={stats} />
     </div>
