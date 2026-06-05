@@ -1,8 +1,10 @@
+import { getLoggedInRecruiterCompany } from "@/lib/api/companies";
 import { getCompanyJobs } from "@/lib/api/jobs";
 import { Pencil, Trash2, Eye } from "lucide-react";
 
 const RecruitersJobs = async () => {
-  const companyId = "6a1f43614b7bd61317a37f23";
+  const company = await getLoggedInRecruiterCompany();
+  const companyId = company?.result?._id;
   const jobs = await getCompanyJobs(companyId, "active");
 
   return (

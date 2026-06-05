@@ -32,8 +32,8 @@ const STATUS_STYLE = {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function CompanySection() {
-  const [company, setCompany] = useState(null);
+export default function CompanySection({ recruiter, recruiterCompany }) {
+  const [company, setCompany] = useState(recruiterCompany?.result || null);
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [logoPreview, setLogoPreview] = useState(null);
@@ -106,6 +106,7 @@ export default function CompanySection() {
         description: data.get("description"),
         logoUrl: isEditing ? (company.logoUrl ?? null) : null,
         status: isEditing ? company.status : "pending",
+        recruiterId: recruiter.id,
       };
 
       console.log("📦 Payload before logo upload:", payload);
