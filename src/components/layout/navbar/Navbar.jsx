@@ -58,18 +58,18 @@ export default function PremiumNavbar() {
             pill container style from your design screenshot. Hidden on mobile.
         */}
         <nav className="hidden md:flex items-center gap-8 bg-[#1A1A1A] border border-white/5 px-8 py-3 rounded-full">
-          <a
-            href="#"
+          <Link
+            href="/dashboard/recruiter/jobs"
             className="text-sm font-medium text-white/70 hover:text-white transition-colors"
           >
             Browse Jobs
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            href="/dashboard/recruiter/company"
             className="text-sm font-medium text-white/70 hover:text-white transition-colors"
           >
             Company
-          </a>
+          </Link>
           <a
             href="#"
             className="text-sm font-medium text-white/70 hover:text-white transition-colors"
