@@ -2,13 +2,15 @@
 
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 export default function AuthForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get(`callbackUrl`) || "/";
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = async (e) => {
     // 1. Stop the page from reloading on submit
@@ -25,7 +27,6 @@ export default function AuthForm() {
       const { data, error } = await authClient.signIn.email({
         email: form.email,
         password: form.password,
-        callbackURL: "/",
       });
 
       // Handle Better-Auth/AuthClient specific errors returned in the response
@@ -33,6 +34,11 @@ export default function AuthForm() {
         throw new Error(
           error.message || "Something went wrong during sign in.",
         );
+      }
+      if (redirectTo) {
+        router.push(redirectTo);
+      } else {
+        router.push("/");
       }
 
       // Success notification
