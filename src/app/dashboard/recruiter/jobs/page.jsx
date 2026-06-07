@@ -1,10 +1,14 @@
 import { getLoggedInRecruiterCompany } from "@/lib/api/companies";
 import { getCompanyJobs } from "@/lib/api/jobs";
 import { Pencil, Trash2, Eye } from "lucide-react";
+import { redirect } from "next/navigation";
 
 const RecruitersJobs = async () => {
   const company = await getLoggedInRecruiterCompany();
   const companyId = company?.result?._id;
+  if (companyId) {
+    redirect(`/signup`);
+  }
   const jobsResult = await getCompanyJobs(companyId, "active");
   const jobs = await jobsResult?.result;
 

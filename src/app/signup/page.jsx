@@ -2,12 +2,15 @@
 
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { Description, Label, Radio, RadioGroup } from "@heroui/react";
 
 export default function AuthForm() {
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get(`callbackUrl`) || "/";
+  console.log("this is redirect params:", redirectTo);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [role, setRole] = useState("seeker");
@@ -38,7 +41,11 @@ export default function AuthForm() {
           error.message || "Something went wrong during sign up.",
         );
       }
-      router.push("/");
+      if (redirectTo) {
+        router.push(redirectTo);
+      } else {
+        router.push("/");
+      }
 
       // Success notification
       toast.success("Account created successfully! Welcome aboard.");

@@ -201,12 +201,13 @@ const JobDetailsPage = async ({ params }) => {
               <p className="text-sm text-text-muted mb-4">
                 Submit your application before the deadline.
               </p>
-              <button
+              <Link
+                href={`/jobs/${id}/apply`}
                 type="button"
                 className="w-full py-3 text-base font-bold text-on-brand bg-brand hover:bg-brand-hover rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 active:scale-[0.98] min-h-11 hover:underline"
               >
                 Apply Now
-              </button>
+              </Link>
             </div>
 
             {/* Job overview card */}
