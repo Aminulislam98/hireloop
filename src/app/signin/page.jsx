@@ -2,10 +2,13 @@
 
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 export default function AuthForm() {
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get(`callbackUrl`) || "/";
   const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = async (e) => {
     // 1. Stop the page from reloading on submit
@@ -99,7 +102,7 @@ export default function AuthForm() {
       </form>
       <div className="text-black flex flex-col justify-center items-center">
         <p>Do not have Account!</p>
-        <Link href={"/signup"} className="underline">
+        <Link href={`/signup?callbackUrl=${redirectTo}`} className="underline">
           Register
         </Link>
       </div>

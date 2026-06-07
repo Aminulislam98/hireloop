@@ -206,7 +206,7 @@ export default function AuthForm() {
         <div className="text-black flex flex-col justify-center items-center mt-6 text-sm">
           <p className="text-gray-600">Already have an account?</p>
           <Link
-            href={"/signin"}
+            href={`/signin?callbackUrl=${redirectTo}`}
             className="underline text-blue-600 hover:text-blue-700 font-medium"
           >
             Sign in
