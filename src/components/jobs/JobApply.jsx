@@ -26,8 +26,8 @@ const JobApply = ({ job, applicant }) => {
       companyId: job?.companyId,
       companyName: job?.companyName,
       applicantId: applicant?._id,
-      applicantName: applicant?.name,
-      applicantEmail: applicant?.email,
+      name: applicant?.name,
+      email: applicant?.email,
       resumeUrl,
       portfolioUrl,
       linkedinUrl,
@@ -227,14 +227,14 @@ const JobApply = ({ job, applicant }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 py-3 text-base font-bold text-on-brand bg-brand hover:bg-brand-hover rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 active:scale-[0.98] min-h-11 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
+                className="flex-1 py-3 text-base font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 active:scale-[0.98] min-h-11 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
               >
                 {loading ? "Submitting..." : "Submit Application"}
               </button>
               <button
                 type="reset"
                 disabled={loading}
-                className="flex-1 py-3 text-base font-medium text-text-secondary bg-surface border-2 border-border hover:border-brand hover:text-brand rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 min-h-11 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="flex-1 py-3 text-base font-medium text-text-secondary bg-surface border-2 border-border hover:border-blue-600 hover:text-blue-600 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 min-h-11 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 Clear Form
               </button>
