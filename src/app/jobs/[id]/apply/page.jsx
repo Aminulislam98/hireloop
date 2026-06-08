@@ -1,65 +1,98 @@
 import JobApply from "@/components/jobs/JobApply";
 import { getApplicationByApplicant } from "@/lib/api/applications";
-
 import { getJobById } from "@/lib/api/jobs";
 import { getUserSession } from "@/lib/core/session";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import React from "react";
+import { ShieldX, Sparkles } from "lucide-react";
 
 const ApplyPage = async ({ params }) => {
   const { id } = await params;
   const user = await getUserSession();
+
   if (!user) {
     redirect(`/signup?callbackUrl=/jobs/${id}/apply`);
   }
+
+  // ── Wrong role ─────────────────────────────────────────────────
   if (user.role !== "seeker") {
     return (
-      <div className="max-w-full w-full min-h-screen flex flex-col justify-center items-center ">
-        <p className="text-center text-xl font-semibold">
-          Only job seeker can apply for this positions. Please sign in with a
-          seeker account to proceed.
-        </p>
-        <Link
-          className="underline text-green-500 text-xl"
-          href={"/dashboard/recruiter/company"}
-        >
-          {" "}
-          Go back to company
-        </Link>
-      </div>
+      <main className="min-h-screen bg-page-bg flex items-center justify-center px-4">
+        <div className="bg-surface border border-border rounded-lg p-8 max-w-md w-full text-center">
+          <div className="w-14 h-14 rounded-full bg-red-50 border border-red-200 flex items-center justify-center mx-auto mb-4">
+            <ShieldX size={24} className="text-error" aria-hidden="true" />
+          </div>
+          <h1 className="text-lg font-semibold text-text-primary mb-2">
+            Recruiter Account Detected
+          </h1>
+          <p className="text-base text-text-secondary mb-6">
+            Only job seekers can apply for positions. Please sign in with a
+            seeker account to proceed.
+          </p>
+          <Link
+            href="/dashboard/recruiter/company"
+            className="inline-block px-6 py-2.5 text-base font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+          >
+            Go back to dashboard
+          </Link>
+        </div>
+      </main>
     );
   }
-  console.log("this is user id:", user?.id);
+
   const applications = await getApplicationByApplicant(user?.id);
+  const job = await getJobById(id);
+
   const plan = {
     name: "Free",
     maxApplicationsPerMonth: 3,
   };
-  const job = await getJobById(id);
 
-  return (
-    <div className="min-h-screen flex flex-col max-w-7xl w-full mx-auto justify-center items-center ">
-      <div className="flex flex-col items-center justify-center border border-white rounded-md p-4">
-        {applications?.result.length < plan.maxApplicationsPerMonth ? (
-          <JobApply applicant={user} job={job} />
-        ) : (
-          <>
-            <h2>
-              You have applied so far: {applications?.result.length} out of{" "}
-              {plan.maxApplicationsPerMonth}
-            </h2>
-            <p>
-              Purchase plan to apply for more Positions.{" "}
-              <Link href={"/plan"} className="underline text-yellow-400">
-                Buy Plan
-              </Link>
-            </p>
-          </>
-        )}
-      </div>
-    </div>
-  );
+  const appliedCount = applications?.result.length;
+  const limitReached = appliedCount >= plan.maxApplicationsPerMonth;
+
+  // ── Plan limit reached ─────────────────────────────────────────
+  if (limitReached) {
+    return (
+      <main className="min-h-screen bg-page-bg flex items-center justify-center px-4">
+        <div className="bg-surface border border-border rounded-lg p-8 max-w-md w-full text-center">
+          <div className="w-14 h-14 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto mb-4">
+            <Sparkles size={24} className="text-warning" aria-hidden="true" />
+          </div>
+          <h1 className="text-lg font-semibold text-text-primary mb-2">
+            Application Limit Reached
+          </h1>
+          <p className="text-base text-text-secondary mb-1">
+            You have used{" "}
+            <span className="font-semibold text-text-primary">
+              {appliedCount} of {plan.maxApplicationsPerMonth}
+            </span>{" "}
+            applications on the{" "}
+            <span className="font-semibold text-text-primary">{plan.name}</span>{" "}
+            plan.
+          </p>
+          <p className="text-base text-text-secondary mb-6">
+            Upgrade your plan to keep applying for more positions.
+          </p>
+          <Link
+            href="/plan"
+            className="inline-block px-6 py-2.5 text-base font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+          >
+            Upgrade Plan
+          </Link>
+          <Link
+            href="/jobs"
+            className="block mt-3 text-base text-text-secondary hover:text-text-primary transition-colors duration-150"
+          >
+            Back to jobs
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  // ── Show the form ──────────────────────────────────────────────
+  return <JobApply applicant={user} job={job} />;
 };
 
 export default ApplyPage;
