@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { submitApplication } from "@/lib/actions/applicaitons";
 
 const JobApply = ({ job, applicant }) => {
+  console.log("this is application Id", applicant?.id);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -25,7 +26,7 @@ const JobApply = ({ job, applicant }) => {
       jobTitle: job?.title,
       companyId: job?.companyId,
       companyName: job?.companyName,
-      applicantId: applicant?._id,
+      applicantId: applicant?.id,
       name: applicant?.name,
       email: applicant?.email,
       resumeUrl,
