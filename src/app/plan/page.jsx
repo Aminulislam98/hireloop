@@ -10,6 +10,7 @@ import { Check, Zap, ChevronDown } from "lucide-react";
 const SEEKER_PLANS = [
   {
     name: "Free",
+    id: "seeker_free",
     price: "$0",
     period: "forever",
     description: "Start exploring opportunities with no commitment.",
@@ -25,6 +26,7 @@ const SEEKER_PLANS = [
   },
   {
     name: "Pro",
+    id: "seeker_pro",
     price: "$19",
     period: "per month",
     description: "For active job seekers who want more reach.",
@@ -40,6 +42,7 @@ const SEEKER_PLANS = [
   },
   {
     name: "Premium",
+    id: "seeker_premium",
     price: "$39",
     period: "per month",
     description: "Everything you need to land your next role faster.",
@@ -61,6 +64,7 @@ const SEEKER_PLANS = [
 const RECRUITER_PLANS = [
   {
     name: "Free",
+
     price: "$0",
     period: "forever",
     description: "Great for a company's first year of hiring.",
@@ -75,6 +79,7 @@ const RECRUITER_PLANS = [
   },
   {
     name: "Growth",
+    id: "recruiter_growth",
     price: "$49",
     period: "per month",
     description: "For teams that hire regularly and need more control.",
@@ -90,6 +95,7 @@ const RECRUITER_PLANS = [
   },
   {
     name: "Enterprise",
+    id: "recruiter_enterprise",
     price: "$149",
     period: "per month",
     description: "Full-scale hiring for large organisations.",
@@ -192,16 +198,22 @@ function PlanCard({ plan }) {
         </ul>
 
         {/* CTA */}
-        <Link
-          href={plan.href}
-          className={`w-full py-3 text-base font-bold text-center rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98] min-h-11 block ${
-            plan.highlighted
-              ? "bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-600"
-              : "bg-page-bg text-text-primary border-2 border-border hover:border-blue-600 hover:text-blue-600 focus:ring-blue-600"
-          }`}
-        >
-          {plan.cta}
-        </Link>
+        <form action="/api/checkout_sessions" method="POST">
+          <input type="hidden" name="plan_id" value={plan.id}></input>
+          <section>
+            <button
+              type="submit"
+              role="link"
+              className={`w-full py-3 text-base font-bold text-center rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98] min-h-11 block ${
+                plan.highlighted
+                  ? "bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-600"
+                  : "bg-page-bg text-text-primary border-2 border-border hover:border-blue-600 hover:text-blue-600 focus:ring-blue-600"
+              }`}
+            >
+              Checkout
+            </button>
+          </section>
+        </form>
       </div>
     </article>
   );
@@ -266,7 +278,7 @@ export default function PricingPage() {
 
   return (
     <main className="min-h-screen bg-page-bg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 xl:py-10">
         {/* Page header */}
         <div className="text-center mb-10">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-primary leading-tight">
