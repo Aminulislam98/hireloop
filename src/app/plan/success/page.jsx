@@ -3,6 +3,8 @@ import { stripe } from "@/lib/stripe";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Check, ArrowRight } from "lucide-react";
+import { email } from "better-auth";
+import { createSubscription } from "@/lib/actions/subscription";
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams;
@@ -12,6 +14,7 @@ export default async function Success({ searchParams }) {
   const {
     status,
     customer_details: { email: customerEmail },
+    metadata,
   } = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ["line_items", "payment_intent"],
   });
@@ -19,6 +22,13 @@ export default async function Success({ searchParams }) {
   if (status === "open") return redirect("/");
 
   if (status === "complete") {
+    const subsInfo = {
+      email: customerEmail,
+      planId: metadata.planId,
+    };
+    // update the user plan
+    const result = await createSubscription(subsInfo);
+    console.log("this is create subscription", result);
     return (
       <main className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4 py-12">
         <div className="bg-[#141414] border border-white/10 rounded-lg w-full max-w-md p-8">

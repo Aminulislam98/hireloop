@@ -10,12 +10,13 @@ import { getPlanById } from "@/lib/api/plans";
 const ApplyPage = async ({ params }) => {
   const { id } = await params;
   const user = await getUserSession();
+  console.log("this is user id:", user?.id);
 
   if (!user) {
     redirect(`/signup?callbackUrl=/jobs/${id}/apply`);
   }
 
-  // ── Wrong role ─────────────────────────────────────────────────
+  // ── Wrong role
   if (user.role !== "seeker") {
     return (
       <main className="min-h-screen bg-page-bg flex items-center justify-center px-4">
@@ -43,15 +44,13 @@ const ApplyPage = async ({ params }) => {
 
   const applications = await getApplicationByApplicant(user?.id);
   const job = await getJobById(id);
+  console.log("this is user plan:", user?.plan);
 
-  const plan1 = await getPlanById(user?.plan || "seeker_free");
-  console.log("this is user plan:", plan1);
+  const planResult = await getPlanById(user?.plan || "seeker_free");
+  console.log("this is planResult:", planResult);
 
-  const plan = {
-    name: "Free",
-    maxApplicationsPerMonth: 3,
-  };
-
+  const plan = planResult.result;
+  console.log("this is plan:", plan);
   const appliedCount = applications?.result.length;
   const limitReached = appliedCount >= plan.maxApplicationsPerMonth;
 
