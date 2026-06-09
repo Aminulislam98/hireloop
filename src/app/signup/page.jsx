@@ -26,6 +26,7 @@ export default function AuthForm() {
 
     // 3. Convert the FormData entries into a standard key-value object
     const form = Object.fromEntries(formData.entries());
+    const plan = role === "seeker" ? "seeker_free" : "recruiter_free";
 
     try {
       const { data, error } = await authClient.signUp.email({
@@ -33,6 +34,7 @@ export default function AuthForm() {
         password: form.password,
         name: form.name,
         role,
+        plan,
       });
 
       // Handle Better-Auth/AuthClient specific errors returned in the response
