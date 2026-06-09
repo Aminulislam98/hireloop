@@ -5,6 +5,7 @@ import { getUserSession } from "@/lib/core/session";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ShieldX, Sparkles } from "lucide-react";
+import { getPlanById } from "@/lib/api/plans";
 
 const ApplyPage = async ({ params }) => {
   const { id } = await params;
@@ -42,6 +43,9 @@ const ApplyPage = async ({ params }) => {
 
   const applications = await getApplicationByApplicant(user?.id);
   const job = await getJobById(id);
+
+  const plan1 = await getPlanById(user?.plan || "seeker_free");
+  console.log("this is user plan:", plan1);
 
   const plan = {
     name: "Free",
