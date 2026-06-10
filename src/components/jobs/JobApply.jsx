@@ -34,6 +34,7 @@ const JobApply = ({ job, applicant }) => {
       linkedinUrl,
       phone,
       coverLetter,
+      status: "applied",
     };
 
     try {
