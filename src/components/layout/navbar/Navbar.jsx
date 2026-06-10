@@ -16,14 +16,30 @@ export default function Navbar() {
   const { data: session, isPending } = authClient.useSession();
   const [menuOpen, setMenuOpen] = useState(false);
   const user = session?.user;
+  console.log("this is user data :", user);
 
   const handleSignOut = async () => {
     await authClient.signOut();
     setMenuOpen(false);
   };
+  const NAV_LINKS = [
+    { label: "Browse Jobs", href: "/jobs" },
+    { label: "Companies", href: "/dashboard/recruiter/company" },
+    { label: "Pricing", href: "/plan" },
+  ];
+  const dashboardLinks = {
+    seeker: "/dashboard/seeker",
+    recruiter: "/dashboard/recruiter",
+  };
+  if (user?.email) {
+    NAV_LINKS.push({
+      label: "Dashboard",
+      href: dashboardLinks[(user?.role, "seeker")],
+    });
+  }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-border">
+    <header className=" top-0 left-0 right-0 z-50 bg-surface border-b border-border sticky">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* ── Logo ─────────────────────────────────────────── */}
         <Link
