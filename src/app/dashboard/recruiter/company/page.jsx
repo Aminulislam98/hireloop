@@ -10,6 +10,7 @@ const CompanyPage = async () => {
     redirect(`/signup`);
   }
   const company = await getRecruiterCompany(user?.id);
+  console.log("company before create:", company);
   return (
     <div>
       <CompanySection recruiter={user} recruiterCompany={company} />

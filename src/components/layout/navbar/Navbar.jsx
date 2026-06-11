@@ -6,12 +6,6 @@ import { Menu, X, Briefcase, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 
-const NAV_LINKS = [
-  { label: "Browse Jobs", href: "/jobs" },
-  { label: "Companies", href: "/dashboard/recruiter/company" },
-  { label: "Pricing", href: "/plan" },
-];
-
 export default function Navbar() {
   const { data: session, isPending } = authClient.useSession();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -30,11 +24,12 @@ export default function Navbar() {
   const dashboardLinks = {
     seeker: "/dashboard/seeker",
     recruiter: "/dashboard/recruiter",
+    admin: "/dashboard/admin",
   };
   if (user?.email) {
     NAV_LINKS.push({
       label: "Dashboard",
-      href: dashboardLinks[(user?.role, "seeker")],
+      href: dashboardLinks[user?.role || "seeker"],
     });
   }
 

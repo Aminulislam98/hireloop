@@ -34,6 +34,7 @@ const STATUS_STYLE = {
 
 export default function CompanySection({ recruiter, recruiterCompany }) {
   const [company, setCompany] = useState(recruiterCompany?.result || null);
+  console.log("this is company:", company);
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [logoPreview, setLogoPreview] = useState(null);
