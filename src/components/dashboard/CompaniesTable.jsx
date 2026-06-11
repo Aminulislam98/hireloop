@@ -1,6 +1,9 @@
 import Image from "next/image";
 import { Check, X } from "lucide-react";
 import { StatusBadge } from "./StatusBadge";
+import { updateCompany } from "@/lib/actions/companies";
+import ApprovedCompanies from "../actionClientButton/ApprovedCompanies";
+import RejectCompanies from "../actionClientButton/RejectCompanies";
 
 export const CompaniesTable = ({ companies }) => {
   return (
@@ -54,22 +57,10 @@ export const CompaniesTable = ({ companies }) => {
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-2">
-                    <button
-                      type="button"
-                      aria-label="Approve company"
-                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-none border border-green-600 px-3 py-1.5 text-sm font-medium text-green-400 transition-colors duration-150 hover:bg-green-600 hover:text-white active:scale-[0.98]"
-                    >
-                      <Check className="h-4 w-4" />
-                      Approve
-                    </button>
-                    <button
-                      type="button"
-                      aria-label="Reject company"
-                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-none border border-red-600 px-3 py-1.5 text-sm font-medium text-red-400 transition-colors duration-150 hover:bg-red-600 hover:text-white active:scale-[0.98]"
-                    >
-                      <X className="h-4 w-4" />
-                      Reject
-                    </button>
+                    {company?.status !== "Approve" && (
+                      <ApprovedCompanies id={company._id} />
+                    )}
+                    <RejectCompanies id={company._id} />
                   </div>
                 </td>
               </tr>

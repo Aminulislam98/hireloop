@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { redirect, useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Form,
   TextField,
@@ -19,9 +20,10 @@ import {
   FileText,
   Building2,
   ChevronDown,
+  Clock,
 } from "lucide-react";
 import { createJobs } from "@/lib/actions/jobs";
-import { authClient } from "@/lib/auth-client"; // Better Auth client
+import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 
 const inputCls =
@@ -74,12 +76,12 @@ function NativeSelect({ name, required, label, placeholder, children }) {
 }
 
 export default function PostJobForm({ company }) {
-  console.log("this is company id:", company?.result?.id);
-  console.log("this is company status:", company?.status);
   const router = useRouter();
-  const { data: session } = authClient.useSession(); // get logged-in user from Better Auth
+  const { data: session } = authClient.useSession();
   const [isRemote, setIsRemote] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const isPending = company?.result?.status === "pending";
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -90,9 +92,9 @@ export default function PostJobForm({ company }) {
     const res = await createJobs({
       ...data,
       isRemote,
-      status: "active", // always active on first post
-      companyId: company?.result?._id, // used to fetch this company's jobs later
-      companyName: company?.result?.name, // shown on job cards
+      status: "active",
+      companyId: company?.result?._id,
+      companyName: company?.result?.name,
     });
 
     if (res) {
@@ -106,25 +108,38 @@ export default function PostJobForm({ company }) {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-zinc-100">Post a Job</h1>
-        <p className="text-sm text-zinc-400 mt-1">
-          Fill in the details below to publish a new job listing.
+      {/* Page header — subtitle adapts to status */}
+      <header>
+        <h1 className="text-2xl font-semibold text-zinc-100">Post a job</h1>
+        <p className="text-base text-zinc-400 mt-1 leading-relaxed">
+          {isPending
+            ? "Your company is being verified before you can publish a job."
+            : "Fill in the details below to publish a new listing."}
         </p>
-        <p className="text-base text-zinc-200 mt-1">
-          Company status:{" "}
-          <span
-            className={`uppercase font-semibold ${company?.result?.status === "pending" ? "text-yellow-500" : "text-green-500"}`}
+      </header>
+
+      {/* Status-aware content */}
+      {isPending ? (
+        <section className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-8 sm:p-12 flex flex-col items-center text-center">
+          <Clock
+            className="w-8 h-8 text-amber-400 mb-5"
+            strokeWidth={1.75}
+            aria-hidden="true"
+          />
+          <h2 className="text-lg font-semibold text-zinc-100 mb-2">
+            Your company is under review
+          </h2>
+          <p className="text-base text-zinc-400 leading-relaxed mb-6 max-w-md">
+            We're verifying your company details. You'll be able to post jobs
+            once the review is complete — this usually takes 1–2 business days.
+          </p>
+          <Link
+            href="/dashboard/recruiter/company"
+            className="inline-flex items-center justify-center h-11 px-5 rounded-lg border border-zinc-700 bg-zinc-900 text-zinc-100 text-base font-medium transition-colors duration-150 hover:bg-zinc-800 hover:border-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
           >
-            {company?.result.status}
-          </span>
-        </p>
-      </div>
-      {company?.result?.status === "pending" ? (
-        <h1 className="text-rose-500">
-          At the moment you are not allowed to post a Job as your company is
-          being under review, please come back once your company is approved.
-        </h1>
+            View company details
+          </Link>
+        </section>
       ) : (
         <Form
           onSubmit={handleSubmit}
@@ -354,7 +369,6 @@ export default function PostJobForm({ company }) {
                 <Building2 size={16} />
               </div>
               <div>
-                {/* companyId and companyName are sent in handleSubmit, not as hidden form fields */}
                 <p className="text-sm font-medium text-zinc-200">
                   {session?.user?.name ?? "Your Company"}
                 </p>
