@@ -8,16 +8,20 @@ import {
   Person,
   Briefcase,
 } from "@gravity-ui/icons";
-import { Button, Drawer } from "@heroui/react";
-import Link from "next/link";
 import {
-  LayoutDashboard,
   Search,
   Bookmark,
   FileText,
   CreditCard,
   Settings,
+  Users,
+  Building2,
+  BarChart3,
+  ShieldCheck,
 } from "lucide-react";
+import { Button, Drawer } from "@heroui/react";
+import Link from "next/link";
+import { LayoutDashboard } from "lucide-react";
 import { getUserSession } from "@/lib/core/session";
 
 export async function DashboardSidebar() {
@@ -46,9 +50,25 @@ export async function DashboardSidebar() {
     { icon: CreditCard, label: "Billing", href: "/dashboard/seeker/billing" },
     { icon: Settings, label: "Settings", href: "/dashboard/seeker/settings" },
   ];
+  const adminNavLinks = [
+    { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard/admin" },
+    { icon: Users, label: "Users", href: "/dashboard/admin/users" },
+    { icon: Building2, label: "Companies", href: "/dashboard/admin/companies" },
+    { icon: Briefcase, label: "Jobs", href: "/dashboard/admin/jobs" },
+    {
+      icon: FileText,
+      label: "Applications",
+      href: "/dashboard/admin/applications",
+    },
+    { icon: BarChart3, label: "Reports", href: "/dashboard/admin/reports" },
+    { icon: CreditCard, label: "Payments", href: "/dashboard/admin/payments" },
+    { icon: Settings, label: "Settings", href: "/dashboard/admin/settings" },
+  ];
+
   const navLinksMap = {
     seeker: seekerNavLinks,
     recruiter: recruiterNavLinks,
+    admin: adminNavLinks,
   };
   const navItems = navLinksMap[user?.role || "seeker"];
 
