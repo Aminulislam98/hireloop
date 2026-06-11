@@ -53,7 +53,7 @@ export async function DashboardSidebar() {
   const adminNavLinks = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard/admin" },
     { icon: Users, label: "Users", href: "/dashboard/admin/users" },
-    { icon: Building2, label: "Companies", href: "/dashboard/admin/companies" },
+    { icon: Building2, label: "Company", href: "/dashboard/admin/company" },
     { icon: Briefcase, label: "Jobs", href: "/dashboard/admin/jobs" },
     {
       icon: FileText,
