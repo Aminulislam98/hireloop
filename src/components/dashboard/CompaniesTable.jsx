@@ -15,6 +15,7 @@ export const CompaniesTable = ({ companies }) => {
               <th className="px-4 py-3 font-medium">Company Name</th>
               <th className="px-4 py-3 font-medium">Industry</th>
               <th className="px-4 py-3 font-medium">Location</th>
+              <th className="px-4 py-3 font-medium">Total Jobs</th>
               <th className="px-4 py-3 font-medium">Status</th>
               <th className="px-4 py-3 font-medium">Date Submitted</th>
               <th className="px-4 py-3 text-right font-medium">Actions</th>
@@ -45,6 +46,9 @@ export const CompaniesTable = ({ companies }) => {
                 </td>
                 <td className="px-4 py-3 text-zinc-400">{company.industry}</td>
                 <td className="px-4 py-3 text-zinc-400">{company.location}</td>
+                <td className="px-4 py-3 text-zinc-400">
+                  {company.applications}
+                </td>
                 <td className="px-4 py-3">
                   <StatusBadge status={company.status} />
                 </td>
