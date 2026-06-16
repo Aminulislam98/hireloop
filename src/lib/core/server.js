@@ -40,6 +40,16 @@ export const serverMutation = async (path, data, method = "POST") => {
     },
     body: JSON.stringify(data),
   });
+
   if (!res.ok) throw new Error("Failed to save company");
+  return handleStatus(res);
+};
+const handleStatus = (res) => {
+  if (res.status === 401) {
+    redirect("/signup");
+  }
+  if (res.status === 403) {
+    redirect("/unauthorized");
+  }
   return res.json();
 };
