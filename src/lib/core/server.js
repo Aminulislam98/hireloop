@@ -20,7 +20,7 @@ export const serverFetch = async (path) => {
   console.log("this is path:", path);
   const res = await fetch(`${baseUrl}${path}`);
 
-  return handleStatus(res);
+  return await res.json();
 };
 
 export const protectedFetch = async (path) => {

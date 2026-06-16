@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { role } from "better-auth/client";
+import { admin } from "better-auth/plugins";
 
 const client = new MongoClient(process.env.MONGODB_URI);
 client.connect();
@@ -24,4 +25,5 @@ export const auth = betterAuth({
       },
     },
   },
+  plugins: [admin()],
 });
